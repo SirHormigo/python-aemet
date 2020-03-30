@@ -2,6 +2,7 @@ import requests
 import json
 import urllib3
 from datetime import datetime
+from datetime import date
 from aemet.constants import *
 
 # Disable Insecure Request Warnings
@@ -654,6 +655,27 @@ class Aemet(AemetHttpClient):
         :param raw: [Opcional] Devuelve el resultado en formato json
         """
         url = VALORES_CLIMATOLOGICOS_MENSUALES.format(anyo, anyo, estacion)
+        data = self.get_request_data(url, todos=True)
+        if raw:
+            return data
+        # TODO
+        return data
+    
+    def get_valores_climatologicos_diarios(self, anyoIni, mesIni, diaIni, anyoFin, mesFin, diaFin, estacion, raw=False):
+        """
+        Devuelve un diccionario con la información de todas las estaciones
+        :param anyoIni: Año inicial de la consulta
+        :param mesIni: Mes inicial de la consulta
+        :param diaIni: Dia inicial de la consulta
+        :param anyofin: Año final de la consulta
+        :param mesFin: Mes final de la consulta
+        :param diaFin: Dia final de la consulta
+        :param estacion: ID de estación de IDEMA
+        :param raw: [Opcional] Devuelve el resultado en formato json
+        """
+        fechaIni = '{:%Y-%m-%dT00:00:00UTC}'.format(date(anyioIni, mesIni, diaIni))
+        fechaFin = '{:%Y-%m-%dT00:00:00UTC}'.format(date(anyioFin, mesFin, diaFin))
+        url = VALORES_CLIMATOLOGICOS_DIARIOS.format(fechaIni, fechaFin, estacion)
         data = self.get_request_data(url, todos=True)
         if raw:
             return data
